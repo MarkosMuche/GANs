@@ -16,13 +16,21 @@ import tensorflow_docs.vis.embed as embed
 from model import make_discriminator_model, make_generator_model
 from utils import train
 
-BUFFER_SIZE = 60000
+EPOCHS = 50
+noise_dim = 100
+num_examples_to_generate = 16
+EPOCHS = 50
+noise_dim = 100
+num_examples_to_generate = 16
+BUFFER_SIZE = 1000
 BATCH_SIZE = 256
 
 generator = make_generator_model()
 discriminator = make_discriminator_model()
 
 (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
+
+train_images = train_images[:1000]
 
 train_images = train_images.reshape(
     train_images.shape[0], 28, 28, 1).astype('float32')
@@ -49,15 +57,6 @@ checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                  generator=generator,
                                  discriminator=discriminator)
 
-
-EPOCHS = 50
-noise_dim = 100
-num_examples_to_generate = 16
-EPOCHS = 50
-noise_dim = 100
-num_examples_to_generate = 16
-BUFFER_SIZE = 60000
-BATCH_SIZE = 256
 
 # You will reuse this seed overtime (so it's easier)
 # to visualize progress in the animated GIF)

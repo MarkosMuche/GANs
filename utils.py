@@ -16,6 +16,8 @@ noise_dim = 100
 num_examples_to_generate = 16
 BUFFER_SIZE = 60000
 BATCH_SIZE = 256
+seed = tf.random.normal([num_examples_to_generate, noise_dim])
+
 
 # This method returns a helper function to compute cross entropy loss
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
@@ -24,6 +26,12 @@ generator_optimizer = tf.keras.optimizers.Adam(1e-4)
 discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
 generator = make_generator_model()
 discriminator = make_discriminator_model()
+checkpoint_dir = './training_checkpoints'
+checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
+checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
+                                 discriminator_optimizer=discriminator_optimizer,
+                                 generator=generator,
+                                 discriminator=discriminator)
 
 
 def discriminator_loss(real_output, fake_output):
@@ -39,7 +47,7 @@ def generator_loss(fake_output):
 
 # Notice the use of `tf.function`
 # This annotation causes the function to be "compiled".
-@tf.function
+# @tf.function
 def train_step(images):
     noise = tf.random.normal([BATCH_SIZE, noise_dim])
 
