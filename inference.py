@@ -7,7 +7,6 @@ import time
 import imageio
 import matplotlib.pyplot as plt
 import numpy as np
-import PIL
 import tensorflow as tf
 from IPython import display
 from tensorflow.keras import layers
@@ -62,32 +61,11 @@ checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
 seed = tf.random.normal([num_examples_to_generate, noise_dim])
 
 
-train(train_dataset, EPOCHS)
-
-
 status = checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 
-status.assert_consumed()
 
+generated_image = generator(noise, training=False)
 
-# Display a single image using the epoch number
-def display_image(epoch_no):
-    return PIL.Image.open('image_at_epoch_{:04d}.png'.format(epoch_no))
+plt.imshow(generated_image[0, :, :, 0], cmap='gray')
 
-
-display_image(EPOCHS)
-
-
-anim_file = 'dcgan.gif'
-
-with imageio.get_writer(anim_file, mode='I') as writer:
-    filenames = glob.glob('image*.png')
-    filenames = sorted(filenames)
-    for filename in filenames:
-        image = imageio.imread(filename)
-        writer.append_data(image)
-    image = imageio.imread(filename)
-    writer.append_data(image)
-
-
-embed.embed_file(anim_file)
+print('nothing')
