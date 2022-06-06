@@ -30,7 +30,7 @@ discriminator = make_discriminator_model()
 
 (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
 
-train_images = train_images[:1000]
+train_images = train_images[:10000]
 
 train_images = train_images.reshape(
     train_images.shape[0], 28, 28, 1).astype('float32')
